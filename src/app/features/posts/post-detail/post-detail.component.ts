@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/state/app.state';
 import { Post } from '../post';
-import { PostService } from '../post.service';
+import { getSelectedPost } from '../state/post.reducer';
 
 @Component({
   selector: 'post-detail',
@@ -10,13 +11,13 @@ import { PostService } from '../post.service';
 })
 export class PostDetailComponent implements OnInit {
   selectedPost: Post | null = null;
-  sub?: Subscription;
 
-  constructor(private postService: PostService) {}
+  constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.sub = this.postService.selectedPostChanges$.subscribe(
-      (currentPost) => (this.selectedPost = currentPost)
-    );
+    // TODO: unsubscribe
+    this.store
+      .select(getSelectedPost)
+      .subscribe((currentPost) => (this.selectedPost = currentPost));
   }
 }

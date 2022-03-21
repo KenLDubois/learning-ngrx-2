@@ -8,6 +8,7 @@ import {
 
 import * as AppState from '../../../state/app.state';
 import { Post } from '../post';
+import * as PostActions from './post.action';
 
 export interface State extends AppState.State {
   posts: PostState;
@@ -44,7 +45,19 @@ export const getPosts = createSelector(
 
 export const postReducer = createReducer<PostState>(
   initialState,
-  on(createAction('[Post] Toggle Post Id'), (state): PostState => {
+  on(PostActions.toggleShowPostId, (state): PostState => {
     return { ...state, showPostId: !state.showPostId };
+  }),
+  on(PostActions.setCurrentPost, (state, action): PostState => {
+    return {
+      ...state,
+      selectedPost: action.post,
+    };
+  }),
+  on(PostActions.clearCurrentPost, (state): PostState => {
+    return {
+      ...state,
+      selectedPost: null,
+    };
   })
 );

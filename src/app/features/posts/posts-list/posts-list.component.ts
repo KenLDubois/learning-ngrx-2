@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import { Post } from '../post';
 import { PostService } from '../post.service';
-import { getShowPostId, State } from '../state/post.reducer';
+import { getSelectedPost, getShowPostId, State } from '../state/post.reducer';
+import * as PostActions from '../state/post.action';
 
 @Component({
   selector: 'posts-list',
@@ -21,14 +21,15 @@ export class PostsListComponent implements OnInit {
 
   // Used to highlight the selected product in the list
   selectedPost?: Post | null;
-  sub?: Subscription;
 
   constructor(private postService: PostService, private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.sub = this.postService.selectedPostChanges$.subscribe(
-      (currentPost) => (this.selectedPost = currentPost)
-    );
+    // TODO: need to unsubscribe
+    this.store.select(getSelectedPost).subscribe((currentPost) => {
+      this.selectedPost = currentPost;
+      console.log(currentPost);
+    });
 
     this.postService.getPosts().subscribe({
       next: (posts: Post[]) => (this.posts = posts),
@@ -41,13 +42,11 @@ export class PostsListComponent implements OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
   checkChanged(): void {
     // this.displayCode = !this.displayCode;
-    this.store.dispatch({ type: '[Post] Toggle Post Id' });
+    this.store.dispatch(PostActions.toggleShowPostId());
   }
 
   newPost(): void {
@@ -55,6 +54,6 @@ export class PostsListComponent implements OnInit {
   }
 
   postSelected(post: Post): void {
-    this.postService.changeSelectedPost(post);
+    this.store.dispatch(PostActions.setCurrentPost({ post }));
   }
 }
