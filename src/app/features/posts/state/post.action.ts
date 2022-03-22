@@ -1,9 +1,16 @@
 import { createAction, props } from '@ngrx/store';
 import { Post } from '../post';
 
-export const populatePosts = createAction(
-  '[Post] Get Posts',
+export const loadPosts = createAction('[Post] Load Posts');
+
+export const loadPostsSuccess = createAction(
+  '[Post] Load Posts Success',
   props<{ posts: Post[] }>()
+);
+
+export const loadPostsFail = createAction(
+  '[Post] Load Posts Fail',
+  props<{ errorMessage: string }>()
 );
 
 export const toggleShowPostId = createAction('[Post] Toggle Show Post Id');

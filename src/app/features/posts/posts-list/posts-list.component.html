@@ -1,16 +1,19 @@
 <input
   type="checkbox"
   (change)="checkChanged()"
-  [checked]="showId"
+  [checked]="(showPostId$ | async) === true"
   id="showId"
   name="showId"
 />
 <label for="showId">Show Post Id</label>
 
-<ul *ngIf="posts">
-  <li *ngFor="let post of posts" [ngClass]="{ active: selectedPost == post }">
+<ul *ngIf="posts$ | async as posts">
+  <li
+    *ngFor="let post of posts"
+    [ngClass]="{ active: (selectedPost$ | async)?.id === post?.id }"
+  >
     <a (click)="postSelected(post)">
-      <span *ngIf="showId == true"> ( {{ post?.id }} ) </span>
+      <span *ngIf="(showPostId$ | async) === true"> ( {{ post?.id }} ) </span>
       {{ post?.title }}
     </a>
   </li>

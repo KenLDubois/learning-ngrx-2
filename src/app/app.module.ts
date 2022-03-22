@@ -13,6 +13,7 @@ import { PostData } from './features/posts/post-data';
 import { MenuComponent } from './home/menu/menu.component';
 import { ShellComponent } from './home/shell/shell.component';
 import { WelcomeComponent } from './home/welcome/welcome.component';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [AppComponent, ShellComponent, MenuComponent, WelcomeComponent],
@@ -28,6 +29,7 @@ import { WelcomeComponent } from './home/welcome/welcome.component';
       maxAge: 25,
       logOnly: environment.production,
     }),
+    EffectsModule.forRoot([]),
   ],
   providers: [],
   bootstrap: [AppComponent],

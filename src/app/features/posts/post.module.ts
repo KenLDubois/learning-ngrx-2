@@ -7,8 +7,8 @@ import { PostsListComponent } from './posts-list/posts-list.component';
 import { StoreModule } from '@ngrx/store';
 import { postReducer } from './state/post.reducer';
 import { PostEditComponent } from './post-edit/post-edit.component';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { EffectsModule } from '@ngrx/effects';
+import { PostEffects } from './state/post.effects';
 
 const postRoutes: Routes = [{ path: '', component: PostsShellComponent }];
 
@@ -23,6 +23,7 @@ const postRoutes: Routes = [{ path: '', component: PostsShellComponent }];
     SharedModule,
     RouterModule.forChild(postRoutes),
     StoreModule.forFeature('posts', postReducer),
+    EffectsModule.forFeature([PostEffects]),
   ],
 })
 export class PostModule {}

@@ -51,7 +51,10 @@ export const getShowEdit = createSelector(
 
 export const postReducer = createReducer<PostState>(
   initialState,
-  on(PostActions.populatePosts, (state, action): PostState => {
+  on(PostActions.loadPosts, (state): PostState => {
+    return { ...state };
+  }),
+  on(PostActions.loadPostsSuccess, (state, action): PostState => {
     return { ...state, posts: action.posts };
   }),
   on(PostActions.toggleShowPostId, (state): PostState => {
@@ -86,7 +89,6 @@ export const postReducer = createReducer<PostState>(
         };
       }
     }
-
     return { ...state };
   }),
   on(PostActions.createPost, (state, action): PostState => {
@@ -132,7 +134,6 @@ export const postReducer = createReducer<PostState>(
         posts: state.posts.slice(0, i).concat(post, state.posts.slice(i + 1)),
       };
     }
-
     return { ...state };
   })
 );

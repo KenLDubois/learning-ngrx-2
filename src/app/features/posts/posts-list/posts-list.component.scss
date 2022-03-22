@@ -1,0 +1,16 @@
+$active: rgb(18, 53, 207);
+
+li.active a {
+  font-weight: bold;
+  color: $active;
+  &:hover {
+    color: lighten($active, 20%);
+  }
+}
+
+a {
+  cursor: pointer;
+  &:hover {
+    color: gray;
+  }
+}

@@ -9,6 +9,7 @@ import {
   State,
 } from '../state/post.reducer';
 import * as PostActions from '../state/post.action';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'posts-list',
@@ -18,47 +19,30 @@ import * as PostActions from '../state/post.action';
 export class PostsListComponent implements OnInit {
   errorMessage?: string;
 
-  displayCode?: boolean;
-
   posts?: Post[];
 
-  showId?: boolean;
+  showPostId$?: Observable<boolean>;
 
   // Used to highlight the selected product in the list
-  selectedPost?: Post | null;
+  selectedPost$?: Observable<Post | null>;
+  posts$?: Observable<Post[]>;
 
-  constructor(private postService: PostService, private store: Store<State>) {}
+  constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe({
-      next: (posts: Post[]) =>
-        this.store.dispatch(PostActions.populatePosts({ posts })),
-      error: (err) => (this.errorMessage = err),
-    });
+    this.store.dispatch(PostActions.loadPosts());
 
-    this.store.select(getPosts).subscribe((posts) => {
-      this.posts = posts;
-    });
+    this.posts$ = this.store.select(getPosts);
 
-    // TODO: need to unsubscribe
-    this.store.select(getSelectedPost).subscribe((currentPost) => {
-      this.selectedPost = currentPost;
-    });
+    this.selectedPost$ = this.store.select(getSelectedPost);
 
-    //TODO: need to unsubscribe
-    this.store.select(getShowPostId).subscribe((showPostId) => {
-      this.showId = showPostId;
-    });
+    this.showPostId$ = this.store.select(getShowPostId);
   }
 
   ngOnDestroy(): void {}
 
   checkChanged(): void {
     this.store.dispatch(PostActions.toggleShowPostId());
-  }
-
-  newPost(): void {
-    this.postService.changeSelectedPost(this.postService.newPost());
   }
 
   postSelected(post: Post): void {

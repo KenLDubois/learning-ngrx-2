@@ -5,6 +5,7 @@ import { State } from 'src/app/state/app.state';
 import { Post } from '../post';
 import { getSelectedPost } from '../state/post.reducer';
 import * as PostActions from '../state/post.action';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'post-edit',
@@ -15,15 +16,16 @@ export class PostEditComponent implements OnInit {
   postForm?: FormGroup;
   post: Post | null = null;
   newPost: boolean = true;
+  selectedPost$?: Observable<Post | null>;
 
   constructor(private fb: FormBuilder, private store: Store<State>) {}
 
   ngOnInit(): void {
     this.buildForm();
 
-    this.store.select(getSelectedPost).subscribe((state) => {
-      this.displayPost(state);
-    });
+    this.selectedPost$ = this.store
+      .select(getSelectedPost)
+      .pipe(tap((selectedPost) => this.displayPost(selectedPost)));
   }
 
   buildForm(): void {

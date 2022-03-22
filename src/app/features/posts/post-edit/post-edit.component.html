@@ -1,3 +1,5 @@
+<div *ngIf="selectedPost$ | async as post; else create"><p>Edit</p></div>
+<ng-template #create> <p>Create</p> </ng-template>
 <form *ngIf="postForm" [formGroup]="postForm">
   <div>
     <input formControlName="title" type="text" />
