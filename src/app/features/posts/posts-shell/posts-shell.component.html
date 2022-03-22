@@ -1,4 +1,10 @@
-<div class="flex">
-  <posts-list class="list"></posts-list>
-  <post-detail class="post"></post-detail>
+<div>
+  <posts-list></posts-list>
+  <div>
+    <button (click)="toggleEdit()">Toggle Edit</button>
+  </div>
+  <post-detail *ngIf="showEdit != true; else edit"></post-detail>
+  <ng-template #edit>
+    <post-edit></post-edit>
+  </ng-template>
 </div>

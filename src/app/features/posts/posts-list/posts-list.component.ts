@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Post } from '../post';
 import { PostService } from '../post.service';
-import { getSelectedPost, getShowPostId, State } from '../state/post.reducer';
+import {
+  getPosts,
+  getSelectedPost,
+  getShowPostId,
+  State,
+} from '../state/post.reducer';
 import * as PostActions from '../state/post.action';
 
 @Component({
@@ -25,15 +30,19 @@ export class PostsListComponent implements OnInit {
   constructor(private postService: PostService, private store: Store<State>) {}
 
   ngOnInit(): void {
+    this.postService.getPosts().subscribe({
+      next: (posts: Post[]) =>
+        this.store.dispatch(PostActions.populatePosts({ posts })),
+      error: (err) => (this.errorMessage = err),
+    });
+
+    this.store.select(getPosts).subscribe((posts) => {
+      this.posts = posts;
+    });
+
     // TODO: need to unsubscribe
     this.store.select(getSelectedPost).subscribe((currentPost) => {
       this.selectedPost = currentPost;
-      console.log(currentPost);
-    });
-
-    this.postService.getPosts().subscribe({
-      next: (posts: Post[]) => (this.posts = posts),
-      error: (err) => (this.errorMessage = err),
     });
 
     //TODO: need to unsubscribe
@@ -45,7 +54,6 @@ export class PostsListComponent implements OnInit {
   ngOnDestroy(): void {}
 
   checkChanged(): void {
-    // this.displayCode = !this.displayCode;
     this.store.dispatch(PostActions.toggleShowPostId());
   }
 

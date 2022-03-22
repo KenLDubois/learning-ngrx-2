@@ -1,0 +1,18 @@
+<form *ngIf="postForm" [formGroup]="postForm">
+  <div>
+    <input formControlName="title" type="text" />
+  </div>
+  <div>
+    <textarea formControlName="body" cols="30" rows="10"></textarea>
+  </div>
+  <div>
+    <div *ngIf="newPost == false; else newPostButtons">
+      <button type="button" (click)="onSaveEditPost()">Save</button>
+      <button type="button" (click)="onClearCurrentPost()">Create New</button>
+      <button type="button" (click)="onDeletePost()">Delete</button>
+    </div>
+    <ng-template #newPostButtons>
+      <button (click)="onCreatePost()">Create</button>
+    </ng-template>
+  </div>
+</form>
