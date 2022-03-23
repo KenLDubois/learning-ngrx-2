@@ -9,7 +9,7 @@
   </div>
   <div>
     <div *ngIf="newPost == false; else newPostButtons">
-      <button type="button" (click)="onSaveEditPost()">Save</button>
+      <button type="button" (click)="onUpdatePost()">Save</button>
       <button type="button" (click)="onClearCurrentPost()">Create New</button>
       <button type="button" (click)="onDeletePost()">Delete</button>
     </div>

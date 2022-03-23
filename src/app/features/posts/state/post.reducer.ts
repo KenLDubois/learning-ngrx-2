@@ -15,7 +15,7 @@ export interface State extends AppState.State {
 
 export interface PostState {
   showPostId: boolean;
-  selectedPost: Post | null;
+  selectedPostId: number | null;
   posts: Post[];
   showEdit: boolean;
   error: string;
@@ -23,7 +23,7 @@ export interface PostState {
 
 const initialState: PostState = {
   showPostId: false,
-  selectedPost: null,
+  selectedPostId: null,
   posts: [],
   showEdit: false,
   error: '',
@@ -36,9 +36,10 @@ export const getShowPostId = createSelector(
   (state) => state.showPostId
 );
 
-export const getSelectedPost = createSelector(
-  getPostFeatureState,
-  (state) => state.selectedPost
+export const getSelectedPost = createSelector(getPostFeatureState, (state) =>
+  state.selectedPostId != undefined
+    ? state.posts.find((p) => p.id == state.selectedPostId)
+    : undefined
 );
 
 export const getPosts = createSelector(
@@ -58,9 +59,6 @@ export const getError = createSelector(
 
 export const postReducer = createReducer<PostState>(
   initialState,
-  on(PostActions.loadPosts, (state): PostState => {
-    return { ...state };
-  }),
   on(PostActions.loadPostsSuccess, (state, action): PostState => {
     return { ...state, posts: action.posts, error: '' };
   }),
@@ -73,77 +71,45 @@ export const postReducer = createReducer<PostState>(
   on(PostActions.setCurrentPost, (state, action): PostState => {
     return {
       ...state,
-      selectedPost: action.post,
+      selectedPostId: action.id ? action.id : null,
     };
   }),
   on(PostActions.clearCurrentPost, (state): PostState => {
     return {
       ...state,
-      selectedPost: null,
+      selectedPostId: null,
     };
   }),
   on(PostActions.toggleShowEdit, (state): PostState => {
     return { ...state, showEdit: !state.showEdit };
   }),
-  on(PostActions.deleteCurrentPost, (state): PostState => {
-    if (state.selectedPost) {
-      let i = state.posts.findIndex((p) => {
-        return state.selectedPost?.id && p?.id == state.selectedPost?.id;
-      });
-
-      if (i > -1 && i < state.posts.length) {
-        return {
-          ...state,
-          selectedPost: null,
-          posts: state.posts.slice(0, i).concat(state.posts.slice(i + 1)),
-        };
-      }
-    }
-    return { ...state };
+  on(PostActions.deletePostSuccess, (state, action): PostState => {
+    const newPosts = state.posts.filter((post) => post?.id != action.id);
+    return { ...state, selectedPostId: null, posts: newPosts, error: '' };
   }),
-  on(PostActions.createPost, (state, action): PostState => {
-    let showEdit =
-      action?.showEdit != undefined ? action.showEdit : state.showEdit;
-
-    console.log(showEdit);
-
-    let id =
-      Math.max.apply(
-        Math,
-        state.posts.map(function (p) {
-          return p?.id ? p.id : -1;
-        })
-      ) + 1;
-
-    let post = {
-      ...action.post,
-      id: id,
-    } as Post;
-
+  on(PostActions.deletePostFailure, (state, action): PostState => {
+    return { ...state, error: action.error };
+  }),
+  on(PostActions.createPostSuccess, (state, action): PostState => {
     return {
       ...state,
-      posts: state.posts.concat(post),
-      selectedPost: post,
-      showEdit: showEdit,
+      selectedPostId: action.post?.id ? action.post.id : null,
+      posts: state.posts.concat(action.post),
+      error: '',
     };
   }),
-  on(PostActions.editCurrentPost, (state, action): PostState => {
-    let i = state.posts.findIndex((p) => {
-      return state.selectedPost?.id && p?.id == state.selectedPost?.id;
-    });
-
-    if (i > -1 && i < state.posts.length) {
-      let post = {
-        ...state.posts[i],
-        title: action.post?.title,
-        body: action.post?.body,
-      } as Post;
-
-      return {
-        ...state,
-        posts: state.posts.slice(0, i).concat(post, state.posts.slice(i + 1)),
-      };
-    }
-    return { ...state };
+  on(PostActions.createPostFailure, (state, action): PostState => {
+    return { ...state, error: action.error };
+  }),
+  on(PostActions.updateCurrentPostSuccess, (state, action): PostState => {
+    const updatedPosts = state.posts.map((item) =>
+      action.post?.id && action.post.id === item.id ? action.post : item
+    );
+    return {
+      ...state,
+      posts: updatedPosts,
+      selectedPostId: action.post?.id ? action.post.id : null,
+      error: '',
+    };
   })
 );

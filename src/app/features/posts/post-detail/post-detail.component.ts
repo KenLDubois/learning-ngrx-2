@@ -10,7 +10,7 @@ import { getSelectedPost } from '../state/post.reducer';
   styleUrls: ['./post-detail.component.scss'],
 })
 export class PostDetailComponent implements OnInit {
-  selectedPost: Post | null = null;
+  selectedPost?: Post;
 
   constructor(private store: Store<State>) {}
 

@@ -14,9 +14,9 @@ import { Observable, tap } from 'rxjs';
 })
 export class PostEditComponent implements OnInit {
   postForm?: FormGroup;
-  post: Post | null = null;
+  post?: Post;
   newPost: boolean = true;
-  selectedPost$?: Observable<Post | null>;
+  selectedPost$?: Observable<Post | undefined>;
 
   constructor(private fb: FormBuilder, private store: Store<State>) {}
 
@@ -35,7 +35,7 @@ export class PostEditComponent implements OnInit {
     });
   }
 
-  displayPost(post: Post | null) {
+  displayPost(post?: Post) {
     this.post = post;
     this.postForm?.reset();
 
@@ -56,24 +56,22 @@ export class PostEditComponent implements OnInit {
   }
 
   onDeletePost(): void {
-    this.store.dispatch(PostActions.deleteCurrentPost());
+    if (this.post?.id) {
+      this.store.dispatch(PostActions.deletePost({ id: this.post.id }));
+    }
   }
 
   onCreatePost(): void {
     this.store.dispatch(
       PostActions.createPost({
-        post: {
-          title: this.postForm?.get('title')?.value,
-          body: this.postForm?.get('body')?.value,
-        } as Post,
-        showEdit: false,
+        post: this.getPostFromForm(),
       })
     );
   }
 
-  onSaveEditPost(): void {
+  onUpdatePost(): void {
     this.store.dispatch(
-      PostActions.editCurrentPost({
+      PostActions.updatePost({
         post: {
           ...this.post,
           title: this.postForm?.get('title')?.value,
@@ -81,5 +79,12 @@ export class PostEditComponent implements OnInit {
         } as Post,
       })
     );
+  }
+
+  getPostFromForm(): Post {
+    return {
+      title: this.postForm?.get('title')?.value,
+      body: this.postForm?.get('body')?.value,
+    } as Post;
   }
 }

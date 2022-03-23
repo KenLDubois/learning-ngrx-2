@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Post } from '../post';
-import { PostService } from '../post.service';
 import {
   getError,
   getPosts,
@@ -21,7 +20,7 @@ export class PostsListComponent implements OnInit {
   showPostId$?: Observable<boolean>;
 
   // Used to highlight the selected product in the list
-  selectedPost$?: Observable<Post | null>;
+  selectedPost$?: Observable<Post | undefined>;
   posts$?: Observable<Post[]>;
   error$?: Observable<string>;
 
@@ -46,6 +45,6 @@ export class PostsListComponent implements OnInit {
   }
 
   postSelected(post: Post): void {
-    this.store.dispatch(PostActions.setCurrentPost({ post }));
+    this.store.dispatch(PostActions.setCurrentPost({ id: post?.id }));
   }
 }

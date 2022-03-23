@@ -13,12 +13,12 @@ export class PostService {
   private postsUrl = 'api/posts';
   private posts?: Post[];
 
-  private selectedPostSource = new BehaviorSubject<Post | null>(null);
+  private selectedPostSource = new BehaviorSubject<Post | undefined>(undefined);
   selectedPostChanges$ = this.selectedPostSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  changeSelectedPost(selectedPost: Post | null): void {
+  changeSelectedPost(selectedPost: Post | undefined): void {
     this.selectedPostSource.next(selectedPost);
   }
 
@@ -43,18 +43,18 @@ export class PostService {
     };
   }
 
-  createProduct(post: Post): Observable<Post> {
+  createPost(post: Post): Observable<Post> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     // Product Id must be null for the Web API to assign an Id
     const newPost = { ...post, id: null };
     return this.http.post<Post>(this.postsUrl, newPost, { headers }).pipe(
       // tap((data) => console.log('createPost: ' + JSON.stringify(data))),
-      tap((data) => {
-        if (!this.posts) {
-          this.posts = [];
-        }
-        this.posts.push(data);
-      }),
+      // tap((data) => {
+      //   if (!this.posts) {
+      //     this.posts = [];
+      //   }
+      //   this.posts.push(data);
+      // }),
       catchError(this.handleError)
     );
   }
@@ -66,10 +66,11 @@ export class PostService {
       tap((data) => console.log('deletePost: ' + id)),
       tap((data) => {
         if (this.posts) {
-          const foundIndex = this.posts.findIndex((item) => item.id === id);
-          if (foundIndex > -1) {
-            this.posts.splice(foundIndex, 1);
-          }
+          this.posts = this.posts.filter((p) => p?.id != id);
+          // const foundIndex = this.posts.findIndex((item) => item.id === id)
+          // if (foundIndex > -1) {
+          //   this.posts = this.posts.splice(foundIndex, 1);
+          // }
         }
       }),
       catchError(this.handleError)
