@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/state/app.state';
@@ -11,6 +11,7 @@ import { Observable, tap } from 'rxjs';
   selector: 'post-edit',
   templateUrl: './post-edit.component.html',
   styleUrls: ['./post-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostEditComponent implements OnInit {
   postForm?: FormGroup;

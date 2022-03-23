@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/state/app.state';
 import {
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
   selector: 'app-posts-shell',
   templateUrl: './posts-shell.component.html',
   styleUrls: ['./posts-shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostsShellComponent implements OnInit {
   showEdit?: boolean;

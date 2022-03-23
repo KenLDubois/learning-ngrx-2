@@ -86,13 +86,19 @@ export class PostService {
       // This is required because the selected product that was edited
       // was a copy of the item from the array.
       tap(() => {
+        // if (this.posts) {
+        //   const foundIndex = this.posts.findIndex(
+        //     (item) => item.id === post.id
+        //   );
+        //   if (foundIndex > -1) {
+        //     this.posts[foundIndex] = post;
+        //   }
+        // }
+
         if (this.posts) {
-          const foundIndex = this.posts.findIndex(
-            (item) => item.id === post.id
+          this.posts = this.posts.map((p) =>
+            p?.id && p.id == post.id ? (p = { ...post }) : post
           );
-          if (foundIndex > -1) {
-            this.posts[foundIndex] = post;
-          }
         }
       }),
       // Return the product on an update

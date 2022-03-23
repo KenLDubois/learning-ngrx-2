@@ -1,20 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Post } from '../post';
 import {
-  getError,
-  getPosts,
-  getSelectedPost,
-  getShowPostId,
-  State,
-} from '../state/post.reducer';
-import * as PostActions from '../state/post.action';
-import { Observable } from 'rxjs';
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { Post } from '../post';
 
 @Component({
   selector: 'posts-list',
   templateUrl: './posts-list.component.html',
   styleUrls: ['./posts-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostsListComponent {
   @Input() showPostId?: boolean | null;
