@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Post } from '../post';
 import {
@@ -16,35 +16,22 @@ import { Observable } from 'rxjs';
   templateUrl: './posts-list.component.html',
   styleUrls: ['./posts-list.component.scss'],
 })
-export class PostsListComponent implements OnInit {
-  showPostId$?: Observable<boolean>;
+export class PostsListComponent {
+  @Input() showPostId?: boolean | null;
+  @Input() selectedPost?: Post | null;
+  @Input() posts?: Post[] | null;
+  @Input() error?: string | null;
 
-  // Used to highlight the selected product in the list
-  selectedPost$?: Observable<Post | undefined>;
-  posts$?: Observable<Post[]>;
-  error$?: Observable<string>;
+  @Output() showPostIdToggled: EventEmitter<any> = new EventEmitter();
+  @Output() postSelected: EventEmitter<Post> = new EventEmitter<Post>();
 
-  constructor(private store: Store<State>) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.store.dispatch(PostActions.loadPosts());
-
-    this.posts$ = this.store.select(getPosts);
-
-    this.selectedPost$ = this.store.select(getSelectedPost);
-
-    this.showPostId$ = this.store.select(getShowPostId);
-
-    this.error$ = this.store.select(getError);
+  onCheckChanged(): void {
+    this.showPostIdToggled.emit();
   }
 
-  ngOnDestroy(): void {}
-
-  checkChanged(): void {
-    this.store.dispatch(PostActions.toggleShowPostId());
-  }
-
-  postSelected(post: Post): void {
-    this.store.dispatch(PostActions.setCurrentPost({ id: post?.id }));
+  onPostSelected(post: Post): void {
+    this.postSelected.emit(post);
   }
 }

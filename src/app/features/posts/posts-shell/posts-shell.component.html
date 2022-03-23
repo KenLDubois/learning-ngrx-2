@@ -1,5 +1,12 @@
 <div>
-  <posts-list></posts-list>
+  <posts-list
+    [showPostId]="showPostId$ | async"
+    [selectedPost]="selectedPost$ | async"
+    [posts]="posts$ | async"
+    [error]="error$ | async"
+    (showPostIdToggled)="onShowPostIdToggled()"
+    (postSelected)="onPostSelected($event)"
+  ></posts-list>
   <div>
     <button (click)="toggleEdit()">Toggle Edit</button>
   </div>
