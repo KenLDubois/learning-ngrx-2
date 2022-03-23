@@ -10,7 +10,10 @@
   <div>
     <button (click)="toggleEdit()">Toggle Edit</button>
   </div>
-  <post-detail *ngIf="showEdit != true; else edit"></post-detail>
+  <post-detail
+    *ngIf="showEdit != true; else edit"
+    [selectedPost]="selectedPost$ | async"
+  ></post-detail>
   <ng-template #edit>
     <post-edit></post-edit>
   </ng-template>

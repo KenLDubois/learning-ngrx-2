@@ -1,17 +1,6 @@
-import {
-  createFeatureSelector,
-  createReducer,
-  createSelector,
-  on,
-} from '@ngrx/store';
-
-import * as AppState from '../../../state/app.state';
+import { createReducer, on } from '@ngrx/store';
 import { Post } from '../post';
 import * as PostActions from './post.action';
-
-export interface State extends AppState.State {
-  posts: PostState;
-}
 
 export interface PostState {
   showPostId: boolean;
@@ -28,34 +17,6 @@ const initialState: PostState = {
   showEdit: false,
   error: '',
 };
-
-const getPostFeatureState = createFeatureSelector<PostState>('posts');
-
-export const getShowPostId = createSelector(
-  getPostFeatureState,
-  (state) => state.showPostId
-);
-
-export const getSelectedPost = createSelector(getPostFeatureState, (state) =>
-  state.selectedPostId != undefined
-    ? state.posts.find((p) => p.id == state.selectedPostId)
-    : undefined
-);
-
-export const getPosts = createSelector(
-  getPostFeatureState,
-  (state) => state.posts
-);
-
-export const getShowEdit = createSelector(
-  getPostFeatureState,
-  (state) => state.showEdit
-);
-
-export const getError = createSelector(
-  getPostFeatureState,
-  (state) => state.error
-);
 
 export const postReducer = createReducer<PostState>(
   initialState,

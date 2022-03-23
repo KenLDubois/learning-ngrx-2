@@ -1,8 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { State } from 'src/app/state/app.state';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Post } from '../post';
-import { getSelectedPost } from '../state/post.reducer';
 
 @Component({
   selector: 'post-detail',
@@ -10,15 +7,8 @@ import { getSelectedPost } from '../state/post.reducer';
   styleUrls: ['./post-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostDetailComponent implements OnInit {
-  selectedPost?: Post;
+export class PostDetailComponent {
+  @Input() selectedPost?: Post | null;
 
-  constructor(private store: Store<State>) {}
-
-  ngOnInit(): void {
-    // TODO: unsubscribe
-    this.store
-      .select(getSelectedPost)
-      .subscribe((currentPost) => (this.selectedPost = currentPost));
-  }
+  constructor() {}
 }

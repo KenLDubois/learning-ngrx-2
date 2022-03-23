@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/state/app.state';
 import { Post } from '../post';
-import { getSelectedPost } from '../state/post.reducer';
+import { getSelectedPost } from '../state';
 import * as PostActions from '../state/post.action';
 import { Observable, tap } from 'rxjs';
 

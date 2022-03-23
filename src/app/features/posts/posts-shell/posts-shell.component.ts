@@ -7,7 +7,7 @@ import {
   getSelectedPost,
   getShowEdit,
   getShowPostId,
-} from '../state/post.reducer';
+} from '../state';
 import * as PostActions from '../state/post.action';
 import { Post } from '../post';
 import { Observable } from 'rxjs';
