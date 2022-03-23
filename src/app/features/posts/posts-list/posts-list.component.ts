@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { Post } from '../post';
 import { PostService } from '../post.service';
 import {
+  getError,
   getPosts,
   getSelectedPost,
   getShowPostId,
@@ -17,15 +18,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-  errorMessage?: string;
-
-  posts?: Post[];
-
   showPostId$?: Observable<boolean>;
 
   // Used to highlight the selected product in the list
   selectedPost$?: Observable<Post | null>;
   posts$?: Observable<Post[]>;
+  error$?: Observable<string>;
 
   constructor(private store: Store<State>) {}
 
@@ -37,6 +35,8 @@ export class PostsListComponent implements OnInit {
     this.selectedPost$ = this.store.select(getSelectedPost);
 
     this.showPostId$ = this.store.select(getShowPostId);
+
+    this.error$ = this.store.select(getError);
   }
 
   ngOnDestroy(): void {}

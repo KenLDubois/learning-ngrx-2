@@ -18,6 +18,7 @@ export interface PostState {
   selectedPost: Post | null;
   posts: Post[];
   showEdit: boolean;
+  error: string;
 }
 
 const initialState: PostState = {
@@ -25,6 +26,7 @@ const initialState: PostState = {
   selectedPost: null,
   posts: [],
   showEdit: false,
+  error: '',
 };
 
 const getPostFeatureState = createFeatureSelector<PostState>('posts');
@@ -49,13 +51,21 @@ export const getShowEdit = createSelector(
   (state) => state.showEdit
 );
 
+export const getError = createSelector(
+  getPostFeatureState,
+  (state) => state.error
+);
+
 export const postReducer = createReducer<PostState>(
   initialState,
   on(PostActions.loadPosts, (state): PostState => {
     return { ...state };
   }),
   on(PostActions.loadPostsSuccess, (state, action): PostState => {
-    return { ...state, posts: action.posts };
+    return { ...state, posts: action.posts, error: '' };
+  }),
+  on(PostActions.loadPostsFailure, (state, action): PostState => {
+    return { ...state, posts: [], error: action.error };
   }),
   on(PostActions.toggleShowPostId, (state): PostState => {
     return { ...state, showPostId: !state.showPostId };

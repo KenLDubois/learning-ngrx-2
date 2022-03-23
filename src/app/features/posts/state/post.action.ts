@@ -8,9 +8,9 @@ export const loadPostsSuccess = createAction(
   props<{ posts: Post[] }>()
 );
 
-export const loadPostsFail = createAction(
+export const loadPostsFailure = createAction(
   '[Post] Load Posts Fail',
-  props<{ errorMessage: string }>()
+  props<{ error: any }>()
 );
 
 export const toggleShowPostId = createAction('[Post] Toggle Show Post Id');
