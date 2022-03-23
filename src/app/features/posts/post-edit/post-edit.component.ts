@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { State } from 'src/app/state/app.state';
 import { Post } from '../post';
 import { getSelectedPost } from '../state';
-import * as PostActions from '../state/post.action';
+import { PostPageActions } from '../state/actions';
 import { Observable, tap } from 'rxjs';
 
 @Component({
@@ -53,18 +53,18 @@ export class PostEditComponent implements OnInit {
   }
 
   onClearCurrentPost(): void {
-    this.store.dispatch(PostActions.clearCurrentPost());
+    this.store.dispatch(PostPageActions.clearCurrentPost());
   }
 
   onDeletePost(): void {
     if (this.post?.id) {
-      this.store.dispatch(PostActions.deletePost({ id: this.post.id }));
+      this.store.dispatch(PostPageActions.deletePost({ id: this.post.id }));
     }
   }
 
   onCreatePost(): void {
     this.store.dispatch(
-      PostActions.createPost({
+      PostPageActions.createPost({
         post: this.getPostFromForm(),
       })
     );
@@ -72,7 +72,7 @@ export class PostEditComponent implements OnInit {
 
   onUpdatePost(): void {
     this.store.dispatch(
-      PostActions.updatePost({
+      PostPageActions.updatePost({
         post: {
           ...this.post,
           title: this.postForm?.get('title')?.value,

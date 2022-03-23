@@ -8,7 +8,7 @@ import {
   getShowEdit,
   getShowPostId,
 } from '../state';
-import * as PostActions from '../state/post.action';
+import { PostPageActions } from '../state/actions';
 import { Post } from '../post';
 import { Observable } from 'rxjs';
 
@@ -32,7 +32,7 @@ export class PostsShellComponent implements OnInit {
       this.showEdit = state;
     });
 
-    this.store.dispatch(PostActions.loadPosts());
+    this.store.dispatch(PostPageActions.loadPosts());
 
     this.posts$ = this.store.select(getPosts);
 
@@ -44,14 +44,14 @@ export class PostsShellComponent implements OnInit {
   }
 
   toggleEdit(): void {
-    this.store.dispatch(PostActions.toggleShowEdit());
+    this.store.dispatch(PostPageActions.toggleShowEdit());
   }
 
   onShowPostIdToggled(): void {
-    this.store.dispatch(PostActions.toggleShowPostId());
+    this.store.dispatch(PostPageActions.toggleShowPostId());
   }
 
   onPostSelected(post: Post): void {
-    this.store.dispatch(PostActions.setCurrentPost({ id: post?.id }));
+    this.store.dispatch(PostPageActions.setCurrentPost({ id: post?.id }));
   }
 }
